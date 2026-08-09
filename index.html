@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="顶置三绳系绳罩转位、捕获与侧面接口轴对齐的交互式概念验证。">
+  <title>星河注能｜顶置三绳系绳罩概念验证</title>
+  <style>
+    :root {
+      --background:#f7f3ec;
+      --foreground:#1e242b;
+      --border:#d8cfc2;
+      --viz-series-1:#a33b32;
+      --viz-series-2:#2e4b73;
+      --viz-series-3:#c68a3a;
+      --destructive:#c62828;
+      --card:#fffdfa;
+      --muted:#716b64;
+      --shadow:0 18px 50px rgba(63,44,35,.12);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      color:var(--foreground);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(163,59,50,.16), transparent 30rem),
+        radial-gradient(circle at 10% 92%, rgba(46,75,115,.10), transparent 34rem),
+        var(--background);
+      font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+      line-height:1.7;
+    }
+    a { color:#8b2f29; }
+    .site-header { max-width:1180px; margin:0 auto; padding:54px 24px 22px; }
+    .eyebrow { color:var(--viz-series-1); font-weight:700; letter-spacing:.18em; font-size:.82rem; }
+    h1 { margin:.45rem 0 .65rem; font-size:clamp(2rem,5vw,4.4rem); line-height:1.08; letter-spacing:-.04em; }
+    .lead { max-width:850px; margin:0; color:#4f4b46; font-size:clamp(1rem,2vw,1.2rem); }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .chip { padding:6px 12px; border:1px solid var(--border); border-radius:999px; background:rgba(255,253,250,.72); color:#5e5852; font-size:.86rem; }
+    main { max-width:1180px; margin:0 auto; padding:18px 24px 58px; }
+    .panel { border:1px solid var(--border); background:rgba(255,253,250,.92); border-radius:24px; box-shadow:var(--shadow); overflow:hidden; }
+    .panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:22px 24px 14px; border-bottom:1px solid var(--border); }
+    .panel-head h2 { margin:0; font-size:1.25rem; }
+    .panel-head p { margin:.25rem 0 0; color:var(--muted); font-size:.9rem; }
+    .status { flex:0 0 auto; border-radius:999px; padding:5px 11px; background:#f4e4e1; color:#873129; font-size:.78rem; font-weight:700; }
+    .viz-wrap { padding:18px; }
+    .viz-controls { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:0 0 12px; }
+    .form-label { display:grid; gap:5px; min-width:180px; color:#514b45; font-size:.86rem; font-weight:700; }
+    .form-select,.form-range { width:100%; }
+    .form-select { border:1px solid var(--border); border-radius:10px; background:#fffdfa; padding:9px 11px; color:var(--foreground); }
+    .form-range { accent-color:var(--viz-series-1); }
+    .btn { border:1px solid var(--border); border-radius:999px; padding:8px 13px; background:#fffdfa; color:var(--foreground); cursor:pointer; font:inherit; font-size:.86rem; transition:.2s ease; }
+    .btn:hover { transform:translateY(-1px); border-color:#a98e83; }
+    .btn-primary { background:var(--viz-series-1); color:white; border-color:var(--viz-series-1); box-shadow:0 7px 18px rgba(163,59,50,.22); }
+    #mother-top-tether-side-port canvas { border:1px solid var(--border); border-radius:16px; }
+    .viz-row { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; padding:10px 2px 0; color:var(--muted); font-size:.83rem; }
+    .viz-badge { margin-left:auto; padding:5px 10px; border-radius:999px; background:#e8edf4; color:#2e4b73; font-weight:700; }
+    .text-destructive { color:var(--destructive)!important; background:#fae8e6!important; }
+    .card.detail { margin-top:12px; border:1px solid var(--border); border-left:4px solid var(--viz-series-1); border-radius:12px; padding:12px 14px; background:#fbf6ed; color:#49443e; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:20px; }
+    .note { border:1px solid var(--border); border-radius:18px; padding:18px; background:rgba(255,253,250,.82); }
+    .note h3 { margin:0 0 7px; color:#2e4b73; font-size:1rem; }
+    .note p,.note li { color:#5c5650; font-size:.91rem; }
+    .note ul { margin:.45rem 0 0; padding-left:1.15rem; }
+    .warning { border-color:#d8aea8; background:#fbefed; }
+    footer { max-width:1180px; margin:0 auto; padding:0 24px 38px; color:#746d66; font-size:.82rem; }
+    @media (max-width:780px) {
+      .grid { grid-template-columns:1fr; }
+      .panel-head { flex-direction:column; }
+      .status { align-self:flex-start; }
+      #mother-top-tether-side-port canvas { height:430px!important; }
+      .viz-badge { width:100%; margin-left:0; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } * { transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="eyebrow">XINGHE REFUELING · CONCEPT STUDY</div>
+    <h1>顶置三绳系绳罩<br>转位与轴对齐验证</h1>
+    <p class="lead">一个可交互的三维概念模型，用于检查顶置罩的六面转位、三绳同步收拢、目标牵引路径，以及侧面接口导向对轴线误差的影响。</p>
+    <div class="chips"><span class="chip">Three.js</span><span class="chip">静态网页</span><span class="chip">无需安装</span><span class="chip">概念验证</span></div>
+  </header>
+  <main>
+    <section class="panel" aria-labelledby="demo-title">
+      <div class="panel-head">
+        <div><h2 id="demo-title">交互式三维验证</h2><p>拖拽旋转，滚轮缩放；按步骤按钮观察机构状态。建议对比“面中心转向导绳器”和“顶部捕获点直接牵引”。</p></div>
+        <span class="status">工程概念验证</span>
+      </div>
+      <div class="viz-wrap">
+<div id="mother-top-tether-side-port">
+  <style>
+    #mother-top-tether-side-port { color:var(--foreground); }
+    #mother-top-tether-side-port canvas { display:block; width:100%; height:520px; background:var(--background); }
+    #mother-top-tether-side-port .detail { min-height:2.6em; }
+  </style>
+  <div class="viz-controls" aria-label="顶置系绳罩与侧面接口验证控制">
+    <label class="form-label">目标平面
+      <select class="form-select" id="mt2-face">
+        <option value="0">面 1</option><option value="1">面 2</option><option value="2">面 3</option>
+        <option value="3">面 4</option><option value="4">面 5</option><option value="5">面 6</option>
+      </select>
+    </label>
+    <label class="form-label">初始轴线误差 <span id="mt2-angle-value">12°</span>
+      <input class="form-range" id="mt2-angle" type="range" min="0" max="18" step="1" value="12">
+    </label>
+    <label class="form-label">捕获后牵引路径
+      <select class="form-select" id="mt2-route">
+        <option value="fairlead">面中心转向导绳器</option>
+        <option value="direct">顶部捕获点直接牵引</option>
+      </select>
+    </label>
+  </div>
+  <div class="viz-controls" aria-label="工作阶段">
+    <button class="btn btn-primary" type="button" data-step="index" aria-pressed="true">1 顶部转位</button>
+    <button class="btn" type="button" data-step="open" aria-pressed="false">2 罩盖打开</button>
+    <button class="btn" type="button" data-step="capture" aria-pressed="false">3 三绳捕获</button>
+    <button class="btn" type="button" data-step="haul" aria-pressed="false">4 拉近</button>
+    <button class="btn" type="button" data-step="align" aria-pressed="false">5 面上对接</button>
+  </div>
+  <canvas aria-label="mother 顶面三绳系绳罩转位、六个平面中心接口及子星牵引路径三维验证"></canvas>
+  <div class="viz-row"><span>拖拽旋转</span><span>滚轮缩放</span><span class="viz-badge" id="mt2-result">罩盖闭合后转位</span></div>
+  <div class="card detail" id="mt2-detail" aria-live="polite">系绳罩完整安装在母星顶面。闭合状态下，顶部转台仅按 60° 调整铰链和开口朝向；六个接口固定在六个平面的中心。</div>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.185.1/build/three.module.js';
+    (()=>{
+      const root=document.getElementById('mother-top-tether-side-port');
+      const canvas=root.querySelector('canvas'),detail=root.querySelector('#mt2-detail'),result=root.querySelector('#mt2-result');
+      const faceSelect=root.querySelector('#mt2-face'),angleInput=root.querySelector('#mt2-angle'),angleValue=root.querySelector('#mt2-angle-value'),routeSelect=root.querySelector('#mt2-route');
+      const cssColor=(name)=>{const p=document.createElement('i');p.style.color=`var(${name})`;root.append(p);const v=getComputedStyle(p).color;p.remove();return new THREE.Color(v);};
+      const C={bg:cssColor('--background'),fg:cssColor('--foreground'),border:cssColor('--border'),p:cssColor('--viz-series-1'),s:cssColor('--viz-series-2'),t:cssColor('--viz-series-3'),d:cssColor('--destructive')};
+      const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(C.bg,1);
+      const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(37,1,.1,100),view={theta:-.72,phi:.82,distance:14.8,target:new THREE.Vector3(.8,1.0,0)};
+      const orbit=()=>{const p=THREE.MathUtils.clamp(view.phi,.22,1.42),r=view.distance;camera.position.set(view.target.x+r*Math.sin(p)*Math.cos(view.theta),view.target.y+r*Math.cos(p),view.target.z+r*Math.sin(p)*Math.sin(view.theta));camera.lookAt(view.target);};
+      scene.add(new THREE.HemisphereLight(C.fg,C.bg,2.2));const key=new THREE.DirectionalLight(C.fg,2.7);key.position.set(7,9,7);scene.add(key);const rim=new THREE.PointLight(C.p,13,18);rim.position.set(-4,4,5);scene.add(rim);
+      const grid=new THREE.GridHelper(18,18,C.border,C.border);grid.position.y=-1.78;scene.add(grid);
+      const metal=(c,r=.27,o=1)=>new THREE.MeshStandardMaterial({color:c,metalness:.78,roughness:r,transparent:o<1,opacity:o,side:THREE.DoubleSide});
+      const cableMats=[metal(C.p,.38),metal(C.s,.38),metal(C.t,.38)];
+      const torusX=(r,t,m)=>{const q=new THREE.Mesh(new THREE.TorusGeometry(r,t,12,64),m);q.rotation.y=Math.PI/2;return q;};
+      const cylinderX=(r,l,m)=>{const q=new THREE.Mesh(new THREE.CylinderGeometry(r,r,l,24),m);q.rotation.z=Math.PI/2;return q;};
+      const xz=(r,a,y=0)=>new THREE.Vector3(Math.cos(a)*r,y,Math.sin(a)*r);
+      const shortest=(from,to)=>from+Math.atan2(Math.sin(to-from),Math.cos(to-from));
+
+      const mother=new THREE.Group();scene.add(mother);
+      const body=new THREE.Mesh(new THREE.CylinderGeometry(2.45,2.45,3.25,6),metal(C.p,.31));body.rotation.y=Math.PI/6;mother.add(body);
+      const topPlate=new THREE.Mesh(new THREE.CylinderGeometry(2.30,2.30,.12,6),metal(C.fg,.32));topPlate.position.y=1.68;topPlate.rotation.y=Math.PI/6;mother.add(topPlate);
+      const bottomPlate=topPlate.clone();bottomPlate.position.y=-1.68;mother.add(bottomPlate);
+      const topTurntableRing=new THREE.Mesh(new THREE.TorusGeometry(2.05,.075,12,72),metal(C.t,.22));topTurntableRing.rotation.x=Math.PI/2;topTurntableRing.position.y=1.77;mother.add(topTurntableRing);
+
+      const ports=[];
+      for(let i=0;i<6;i++){
+        const a=i*Math.PI/3,n=new THREE.Vector3(Math.cos(a),0,Math.sin(a));
+        const g=new THREE.Group();g.position.copy(n.clone().multiplyScalar(2.14));g.rotation.y=-a;mother.add(g);ports.push(g);
+        const pad=new THREE.Mesh(new THREE.BoxGeometry(.18,1.52,1.52),metal(C.fg,.34));g.add(pad);
+        const ring=torusX(.57,.075,metal(C.fg,.18));ring.position.x=.13;g.add(ring);g.userData.ring=ring;
+        const annulus=new THREE.Mesh(new THREE.RingGeometry(.26,.50,48),metal(C.t,.4,.50));annulus.rotation.y=Math.PI/2;annulus.position.x=.14;g.add(annulus);
+        const fairlead=torusX(.17,.035,metal(C.t,.18));fairlead.position.x=.23;g.add(fairlead);g.userData.fairlead=fairlead;
+      }
+
+      const topTurret=new THREE.Group();mother.add(topTurret);
+      const hingeBase=new THREE.Group();hingeBase.position.set(0,1.80,2.62);topTurret.add(hingeBase);
+      const hinge=cylinderX(.14,1.32,metal(C.t,.20));hinge.rotation.set(0,0,0);hinge.rotation.z=Math.PI/2;hingeBase.add(hinge);
+      const lidPivot=new THREE.Group();hingeBase.add(lidPivot);
+      const cap=new THREE.Group();cap.position.z=-2.62;lidPivot.add(cap);
+      const back=new THREE.Mesh(new THREE.RingGeometry(1.30,2.38,72),metal(C.fg,.32,.52));back.rotation.x=Math.PI/2;back.position.y=-.15;cap.add(back);
+      for(let i=0;i<12;i++){
+        const a=i*Math.PI/6,p=xz(2.12,a,-.04);const panel=new THREE.Mesh(new THREE.BoxGeometry(.78,.16,.30),metal(i%2?C.fg:C.t,.34));panel.position.copy(p);panel.rotation.y=-a;cap.add(panel);
+        const bolt=new THREE.Mesh(new THREE.SphereGeometry(.045,10,10),metal(C.t,.16));bolt.position.copy(xz(2.10,a,.10));cap.add(bolt);
+      }
+      const fixedRing=new THREE.Mesh(new THREE.TorusGeometry(1.28,.075,14,72),metal(C.fg,.18));fixedRing.rotation.x=Math.PI/2;fixedRing.position.y=.06;cap.add(fixedRing);
+      const outerDrive=new THREE.Group();cap.add(outerDrive);
+      const outerRing=new THREE.Mesh(new THREE.TorusGeometry(1.86,.09,14,84),metal(C.p,.18));outerRing.rotation.x=Math.PI/2;outerRing.position.y=.06;outerDrive.add(outerRing);
+      const ropes=[];
+      for(let i=0;i<3;i++){const q=new THREE.Mesh(new THREE.BufferGeometry(),cableMats[i]);cap.add(q);ropes.push(q);}
+      const capturedBall=new THREE.Mesh(new THREE.SphereGeometry(.18,22,22),metal(C.t,.14));scene.add(capturedBall);
+
+      const childFrame=new THREE.Group();scene.add(childFrame);const childPose=new THREE.Group();childFrame.add(childPose);
+      const childBody=new THREE.Mesh(new THREE.CylinderGeometry(1.34,1.34,2.30,3),metal(C.s,.28));childBody.rotation.y=Math.PI/6;childPose.add(childBody);
+      const childFace=new THREE.Mesh(new THREE.BoxGeometry(.18,1.48,1.48),metal(C.s,.24));childFace.position.x=-1.25;childPose.add(childFace);
+      const childPort=torusX(.57,.075,metal(C.fg,.18));childPort.position.x=-1.38;childPose.add(childPort);
+      const guideTube=cylinderX(.10,1.55,metal(C.t,.18));guideTube.position.x=-.55;childPose.add(guideTube);
+      const noseEye=torusX(.17,.035,metal(C.t,.18));noseEye.position.x=-1.40;childPose.add(noseEye);
+      const reel=new THREE.Mesh(new THREE.CylinderGeometry(.26,.26,.32,24),metal(C.t,.22));reel.rotation.z=Math.PI/2;reel.position.x=.30;childPose.add(reel);
+      const launchLine=new THREE.Mesh(new THREE.BufferGeometry(),metal(C.fg,.45));scene.add(launchLine);
+      const motherAxis=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(),2.0,C.p,.18,.09);scene.add(motherAxis);
+      const childAxis=new THREE.ArrowHelper(new THREE.Vector3(-1,0,0),new THREE.Vector3(),1.6,C.s,.18,.09);scene.add(childAxis);
+
+      const steps={
+        index:{lid:0,closure:0,childR:6.7,childY:0,ball:'nose',text:'系绳罩完整位于母星顶面。罩盖闭合后，顶部转台按 60° 调整铰链和开口朝向；六个接口始终固定在六个平面的中心。'},
+        open:{lid:Math.PI*.47,closure:0,childR:6.45,childY:0,ball:'nose',text:'顶部罩盖朝选定平面方向打开。固定内环、旋转外环和三根长绳随罩盖一起抬起，安装关系与 mother 保持一致。'},
+        capture:{lid:Math.PI*.47,closure:1,childR:6.15,childY:0,ball:'cap',text:'子星从面中心接口发射单颗带绳弹珠。外环旋转，三根长绳收敛并在顶部罩盖内锁定弹珠。'},
+        haul:{lid:Math.PI*.47,closure:1,childR:4.90,childY:0,ball:'cap',text:'直接从顶部捕获点牵引会形成斜拉。启用面中心转向导绳器后，最后一段系绳改为沿选定平面的接口轴线牵引。'},
+        align:{lid:Math.PI*.47,closure:1,childR:3.62,childY:0,ball:'cap',text:'转向导绳器位于平面中心的环形接口内孔；张紧绳穿过子星轴向导绳管，修正俯仰和偏航。滚转仍需姿控或小型键位。'}
+      };
+      let active='index',face=0,currentTurret=Math.PI/2,targetTurret=Math.PI/2;
+      const setStep=(name)=>{active=name;root.querySelectorAll('[data-step]').forEach(b=>{const on=b.dataset.step===name;b.classList.toggle('btn-primary',on);b.setAttribute('aria-pressed',String(on));});detail.textContent=steps[name].text;};
+      root.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>setStep(b.dataset.step)));
+      faceSelect.addEventListener('change',()=>{face=Number(faceSelect.value);targetTurret=Math.PI/2-face*Math.PI/3;setStep('index');});
+      angleInput.addEventListener('input',()=>angleValue.textContent=`${angleInput.value}°`);
+      const updateRopes=(closure)=>{
+        outerDrive.rotation.y=closure*Math.PI*.82;
+        for(let i=0;i<3;i++){
+          const a=Math.PI/6+i*Math.PI*2/3,endA=a+Math.PI/3+closure*Math.PI*.82;
+          const start=xz(1.28,a,.10),end=xz(1.86,endA,.10),centre=xz(THREE.MathUtils.lerp(1.18,.06,closure),a+THREE.MathUtils.lerp(.42,0,closure),.25);
+          const tangent=new THREE.Vector3(-Math.sin(a),0,Math.cos(a));const c1=start.clone().lerp(centre,.42).addScaledVector(tangent,.36*(1-closure));const c2=centre.clone().lerp(end,.36).addScaledVector(tangent,-.20*(1-closure));
+          ropes[i].geometry.dispose();ropes[i].geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3([start,c1,centre,c2,end]),36,.025,8,false);
+        }
+      };
+      const resize=()=>{const r=canvas.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();};new ResizeObserver(resize).observe(canvas);resize();
+      let pointer=null;canvas.addEventListener('pointerdown',e=>{pointer={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});canvas.addEventListener('pointermove',e=>{if(!pointer)return;view.theta-=(e.clientX-pointer.x)*.008;view.phi+=(e.clientY-pointer.y)*.008;pointer={x:e.clientX,y:e.clientY};});canvas.addEventListener('pointerup',()=>pointer=null);canvas.addEventListener('wheel',e=>{e.preventDefault();view.distance=THREE.MathUtils.clamp(view.distance+e.deltaY*.009,9,21);},{passive:false});
+      const tick=()=>{
+        const st=steps[active],a=face*Math.PI/3,route=routeSelect.value,initial=THREE.MathUtils.degToRad(Number(angleInput.value));
+        currentTurret=THREE.MathUtils.lerp(currentTurret,shortest(currentTurret,targetTurret),.075);topTurret.rotation.y=currentTurret;lidPivot.rotation.x=THREE.MathUtils.lerp(lidPivot.rotation.x,st.lid,.08);updateRopes(st.closure);
+        childFrame.rotation.y=-a;
+        let remaining=initial,targetY=st.childY,targetR=st.childR;
+        if((active==='haul'||active==='align')&&route==='fairlead'){remaining=active==='align'?initial*.08:initial*.42;targetY=0;}
+        if((active==='haul'||active==='align')&&route==='direct'){remaining=initial;targetY=active==='align'?2.05:1.10;targetR=active==='align'?4.15:5.05;}
+        childPose.position.x=THREE.MathUtils.lerp(childPose.position.x,targetR,.07);childPose.position.y=THREE.MathUtils.lerp(childPose.position.y,targetY,.07);childPose.rotation.z=THREE.MathUtils.lerp(childPose.rotation.z,remaining,.08);childPose.rotation.y=THREE.MathUtils.lerp(childPose.rotation.y,-remaining*.38,.08);
+        scene.updateMatrixWorld(true);
+        const capWorld=cap.localToWorld(new THREE.Vector3(0,.28,0));const noseWorld=childPose.localToWorld(new THREE.Vector3(-1.40,0,0));const selectedPort=ports[face],fairleadWorld=selectedPort.localToWorld(new THREE.Vector3(.23,0,0));
+        capturedBall.position.lerp(st.ball==='cap'?capWorld:noseWorld,.12);
+        const points=[capturedBall.position.clone()];if((active==='haul'||active==='align')&&route==='fairlead')points.push(capWorld.clone().lerp(fairleadWorld,.70).add(new THREE.Vector3(0,.10,0)),fairleadWorld);points.push(noseWorld);
+        launchLine.geometry.dispose();launchLine.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),38,.022,8,false);
+        const radial=new THREE.Vector3(Math.cos(a),0,Math.sin(a));motherAxis.position.copy(radial.clone().multiplyScalar(2.22));motherAxis.setDirection(radial);
+        const childDir=new THREE.Vector3(-1,0,0).applyEuler(childPose.rotation).applyEuler(childFrame.rotation);childAxis.position.copy(noseWorld);childAxis.setDirection(childDir.normalize());
+        ports.forEach((g,i)=>{g.userData.ring.material.color.copy(i===face?C.p:C.fg);g.userData.fairlead.visible=i===face;});
+        if(active==='index'){result.textContent='顶置罩盖：闭合转位；接口：六个平面中心';result.classList.remove('text-destructive');}
+        else if(active==='open'||active==='capture'){result.textContent='顶部捕获尚未约束侧面接口轴线';result.classList.remove('text-destructive');}
+        else if(route==='direct'){result.textContent=`直接斜拉：剩余轴线误差 ${THREE.MathUtils.radToDeg(remaining).toFixed(1)}°，目标点偏离侧面接口`;result.classList.add('text-destructive');}
+        else{result.textContent=`面中心转向：剩余轴线误差 ${THREE.MathUtils.radToDeg(remaining).toFixed(1)}°${active==='align'?'；滚转未约束':''}`;result.classList.toggle('text-destructive',active==='align'&&THREE.MathUtils.radToDeg(remaining)>3);}
+        orbit();renderer.render(scene,camera);requestAnimationFrame(tick);
+      };
+      childPose.position.set(steps.index.childR,0,0);setStep('index');tick();
+    })();
+  </script>
+</div>
+
+      </div>
+    </section>
+    <section class="grid" aria-label="方案说明">
+      <article class="note">
+        <h3>构型要点</h3>
+        <ul>
+          <li>固定内环与旋转外环分别连接三条相隔120°、具有相位偏置的系绳端点。</li>
+          <li>外环旋转使三绳同步收拢，在中心形成捕获区域。</li>
+          <li>六个对接口位于母星六个六边形侧面的中心。</li>
+        </ul>
+      </article>
+      <article class="note">
+        <h3>导向机理</h3>
+        <p>直接从顶部捕获点牵引会形成斜拉。面中心导向器改变最后一段系绳方向，轴向导管可进一步减小俯仰和偏航误差。</p>
+      </article>
+      <article class="note warning">
+        <h3>当前边界</h3>
+        <p>滚转仍需键控结构或主动姿态控制；柔性系绳动力学、欠驱动可控性、碰撞风险、锁紧与载荷转移尚未形成完整工程闭环。</p>
+      </article>
+    </section>
+  </main>
+  <footer>本页面仅用于结构几何和牵引路径的概念展示，不代表飞行级设计、在轨验证结论或完整工程实现。</footer>
+</body>
+</html>
